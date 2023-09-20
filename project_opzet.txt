@@ -1,0 +1,16 @@
+formule mandelbrood in functie
+4 invoervelden: x-coordinaat, y coord, schaal en maximaal aantal herhalingen van de functie
+nog 2 meer controls: aantal voorbeeld plaatjes en aantal kleurweergaves
+
+visual studio's visuele design
+
+
+functies voor:
+- window zelf
+- invulformulier en controls (form)
+- plaatje
+- een functie voor de pixel in het plaatje zetten
+- een button
+- een functie voor schaalverandering
+- een functie voor de mandelbrood algoritme
+- een functie voor de afstand uitrekenen vanaf middelpunt (rekenen met 4 ipv 2)
