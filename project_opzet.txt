@@ -14,3 +14,15 @@ functies voor:
 - een functie voor schaalverandering
 - een functie voor de mandelbrood algoritme
 - een functie voor de afstand uitrekenen vanaf middelpunt (rekenen met 4 ipv 2)
+
+volgorde functies:
+klik op knop -->
+de x en y waarden ophalen -->
+for met maxherhalingen {
+	stoppen we de x en y waarde in de formule (ook a en b)-->
+	uitkomst van a en b sla je op in een variabele -->
+	de afstand uitrekenen -->
+	gaat uit van afstand kleiner dan 2 -->
+	plaats pixel op coordinaat (a,b)
+	}
+		
