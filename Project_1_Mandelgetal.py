@@ -8,39 +8,59 @@ from PIL.ImageDraw import Draw
 
 
 def MandelBrotAlgoritm():
-    GetMandelNumber()
-
-def GetMandelNumber():
-    x = float(invoerXCoord. get())
-    y = float(invoerYCoord.get())
+    
     maxHerhalingen = int(invoerMaxHerhalingen.get())
+    xMiddel = float(invoerXCoord.get())
+    yMiddel = float(invoerYCoord.get())
+    schaal = float(invoerSchaal.get())
+    
+    
+    (plaatjeX, plaatjeY) = plaatje.size
+    xMin= -plaatjeX*schaal
+    xMax= plaatjeX*schaal
+    yMin= -plaatjeY*schaal
+    yMax=plaatjeY*schaal
+    
+    print(f"xmin:{xMin}, xMax:{xMax}, yMin:{yMin}, yMax:{yMax}")
+    for xCoord in range(int(xMin),int(xMax)):
+        for yCoord in range(int(yMin),int(yMax)):
+            MandelNumber = GetMandelNumber(xCoord, yCoord, maxHerhalingen)
+            paintPixel(xCoord, yCoord, MandelNumber)
+    global variabelePhotoImage
+    variabelePhotoImage = PhotoImage(plaatje)
+    afbeelding.configure(image=variabelePhotoImage)
+   
+
+def GetMandelNumber(x,y, maxHerhalingen):
     a=0
     b=0
     MandelNumber=1
     for i in range(maxHerhalingen):
-        MandelNumber = MandelNumber + 1
         xCoord = (a * a) - (b * b) + x
         yCoord = ((2 * a) * b) + y
         afstandXenY = math.sqrt((xCoord * xCoord) + (yCoord * yCoord))
         maxAfstand = 2
         if(afstandXenY < maxAfstand):
+            MandelNumber = MandelNumber + 1
             a=xCoord
             b=yCoord
+        if(i == (maxHerhalingen-1)):
+            return maxHerhalingen
         else:
-            variabelePhotoImage = PhotoImage(plaatje)
-            afbeelding.configure(image=variabelePhotoImage)
-            print(f"{MandelNumber}")
-            break
+            return MandelNumber
     
     
     
-def paintPixel(xCoord, yCoord):
-    draw.rectangle(((xCoord, yCoord), (xCoord, yCoord)) ,outline="black")     
+def paintPixel(xCoord, yCoord, MandelNumber):
+    if(MandelNumber%2==0):
+        draw.rectangle(((xCoord,yCoord),((xCoord+1),(yCoord+1))), ((0), (0), (0)))
+    else:
+        draw.rectangle(((xCoord,yCoord),((xCoord+1),(yCoord+1))), ((255), (255), (255)))
 
 
 schermpje = Frame()
 schermpje.master.title("Mandelbrood")
-schermpje.configure(width=500, height=600)
+schermpje.configure(width=400, height=600)
 
 tekstXCoord = Label (schermpje)
 tekstYCoord = Label (schermpje)
@@ -89,14 +109,13 @@ knop.place(x=300,y=80)
 knop.configure(text="bereken")
 knop.configure(command=MandelBrotAlgoritm)
 
-plaatje = Image.new(mode="RGBA", size=(600,480))
+plaatje = Image.new(mode="RGBA", size=(400,400))
 afbeelding = Label(schermpje)
-afbeelding.place(x=0, y=120)
+afbeelding.place(x=0, y=200)
 afbeelding.configure(background="white")
 draw = Draw(plaatje)
 
-variabelePhotoImage = PhotoImage(plaatje)
-afbeelding.configure(image=variabelePhotoImage)
+
 schermpje.pack()
 schermpje.mainloop()
 
