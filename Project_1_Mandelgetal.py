@@ -1,10 +1,11 @@
-
 import math
-from tkinter import Canvas, Frame, OptionMenu, StringVar
+import numpy as np
+from tkinter import Frame, OptionMenu, StringVar
 from tkinter import Label, Button, Entry
 from PIL.ImageTk import PhotoImage
 from PIL import Image
 from PIL.ImageDraw import Draw
+
 
 
 def MandelBrotAlgoritm():
@@ -13,19 +14,20 @@ def MandelBrotAlgoritm():
     xMiddel = float(invoerXCoord.get())
     yMiddel = float(invoerYCoord.get())
     schaal = float(invoerSchaal.get())
+    colorPattern= variable2.get()
     
-    
+    print(plaatje.size)
     (plaatjeX, plaatjeY) = plaatje.size
-    xMin= -plaatjeX*schaal
-    xMax= plaatjeX*schaal
-    yMin= -plaatjeY*schaal
-    yMax=plaatjeY*schaal
+    xMin= (-plaatjeX*schaal)/2
+    xMax= (plaatjeX*schaal)/2
+    yMin= (-plaatjeY*schaal)/2
+    yMax=(plaatjeY*schaal)/2
     
     print(f"xmin:{xMin}, xMax:{xMax}, yMin:{yMin}, yMax:{yMax}")
-    for xCoord in range(int(xMin),int(xMax)):
-        for yCoord in range(int(yMin),int(yMax)):
-            MandelNumber = GetMandelNumber(xCoord, yCoord, maxHerhalingen)
-            paintPixel(xCoord, yCoord, MandelNumber)
+    for xCoord in np.arange(float(xMin),float(xMax), schaal):
+        for yCoord in np.arange(float(yMin),float(yMax), schaal):
+            MandelNumber = GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingen)
+            paintPixel((xCoord+xMax), (yCoord+yMax), MandelNumber, schaal, colorPattern)
     global variabelePhotoImage
     variabelePhotoImage = PhotoImage(plaatje)
     afbeelding.configure(image=variabelePhotoImage)
@@ -36,26 +38,31 @@ def GetMandelNumber(x,y, maxHerhalingen):
     b=0
     MandelNumber=1
     for i in range(maxHerhalingen):
-        xCoord = (a * a) - (b * b) + x
-        yCoord = ((2 * a) * b) + y
-        afstandXenY = math.sqrt((xCoord * xCoord) + (yCoord * yCoord))
+        xCoord = (a * a) - (b * b) + float(x)
+        yCoord = (2 * a * b) + float(y)
+        afstandXenY = (xCoord * xCoord) + (yCoord * yCoord)
         maxAfstand = 2
-        if(afstandXenY < maxAfstand):
+        if(afstandXenY < (maxAfstand * maxAfstand)):
             MandelNumber = MandelNumber + 1
             a=xCoord
             b=yCoord
         if(i == (maxHerhalingen-1)):
-            return maxHerhalingen
+            MandelNumber = 98
+            return MandelNumber
         else:
             return MandelNumber
     
     
     
-def paintPixel(xCoord, yCoord, MandelNumber):
-    if(MandelNumber%2==0):
-        draw.rectangle(((xCoord,yCoord),((xCoord+1),(yCoord+1))), ((0), (0), (0)))
-    else:
-        draw.rectangle(((xCoord,yCoord),((xCoord+1),(yCoord+1))), ((255), (255), (255)))
+def paintPixel(xCoord, yCoord, MandelNumber, schaal, colorPattern):
+    if(colorPattern==("black and white")):
+        if(MandelNumber%2==0):    
+            draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((0), (0), (0)))
+        else:        
+            draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((255), (255), (255)))
+    elif():
+        pass
+        
 
 
 schermpje = Frame()
@@ -93,15 +100,15 @@ invoerMaxHerhalingen.place(x=150, y=80)
 invoerMaxHerhalingen.configure(width=20)
 
 presetOptions = ["Test1", "Test2", "Test3"]
-variable = StringVar(schermpje)
-variable.set(presetOptions[0])
-preset = OptionMenu(schermpje, variable, *presetOptions)
+variable1 = StringVar(schermpje)
+variable1.set(presetOptions[0])
+preset = OptionMenu(schermpje, variable1, *presetOptions)
 preset.place(x=300, y=20)
 
-presetOptions = ["Zwart Wit", "Regenboog", "Kleur"]
-variable = StringVar(schermpje)
-variable.set(presetOptions[0])
-preset = OptionMenu(schermpje, variable, *presetOptions)
+presetOptions = ["black and white", "rainbow", "color_shift_blue"]
+variable2 = StringVar(schermpje)
+variable2.set(presetOptions[0])
+preset = OptionMenu(schermpje, variable2, *presetOptions)
 preset.place(x=300, y=50)
 
 knop = Button(schermpje)
