@@ -7,14 +7,13 @@ from PIL import Image
 from PIL.ImageDraw import Draw
 
 
-
 def MandelBrotAlgoritm():
     
     maxHerhalingen = int(invoerMaxHerhalingen.get())
     xMiddel = float(invoerXCoord.get())
     yMiddel = float(invoerYCoord.get())
     schaal = float(invoerSchaal.get())
-    colorPattern= variable2.get()
+    colorPattern= variableKleurenschema.get()
     
     print(plaatje.size)
     (plaatjeX, plaatjeY) = plaatje.size
@@ -28,6 +27,29 @@ def MandelBrotAlgoritm():
         for yCoord in np.arange(float(yMin),float(yMax), schaal):
             MandelNumber = GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingen)
             paintPixel((xCoord+xMax), (yCoord+yMax), MandelNumber, schaal, colorPattern)
+    global variabelePhotoImage
+    variabelePhotoImage = PhotoImage(plaatje)
+    afbeelding.configure(image=variabelePhotoImage)
+
+def PresetMandelBrot(maxHerhalingen, xMiddel, yMiddel, schaal, colorPattern):
+        
+    maxHerhalingenVar = maxHerhalingen
+    xMiddelVar = xMiddel
+    yMiddel = yMiddel
+    schaalVar = schaal
+    colorPatternVar = colorPattern
+    
+    (plaatjeX, plaatjeY) = plaatje.size
+    xMin= (-plaatjeX*schaalVar)/2
+    xMax= (plaatjeX*schaalVar)/2
+    yMin= (-plaatjeY*schaalVar)/2
+    yMax=(plaatjeY*schaalVar)/2
+    
+    print(f"xmin:{xMin}, xMax:{xMax}, yMin:{yMin}, yMax:{yMax}")
+    for xCoord in np.arange(float(xMin),float(xMax), schaalVar):
+        for yCoord in np.arange(float(yMin),float(yMax), schaalVar):
+            MandelNumber = GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingenVar)
+            paintPixel((xCoord+xMax), (yCoord+yMax), MandelNumber, schaalVar, colorPatternVar)
     global variabelePhotoImage
     variabelePhotoImage = PhotoImage(plaatje)
     afbeelding.configure(image=variabelePhotoImage)
@@ -78,6 +100,8 @@ tekstXCoord = Label (schermpje)
 tekstYCoord = Label (schermpje)
 tekstSchaal = Label (schermpje)
 tekstMaxHerhalingen = Label (schermpje)
+tekstPresetOpties = Label (schermpje)
+tekstKleurenSchemaOpties = Label (schermpje)
 
 invoerXCoord = Entry (schermpje)
 invoerYCoord = Entry (schermpje)
@@ -104,20 +128,27 @@ tekstMaxHerhalingen.configure(text="maximale herhalingen")
 invoerMaxHerhalingen.place(x=150, y=80)
 invoerMaxHerhalingen.configure(width=20)
 
-presetOptions = ["Test1", "Test2", "Test3"]
-variable1 = StringVar(schermpje)
-variable1.set(presetOptions[0])
-preset = OptionMenu(schermpje, variable1, *presetOptions)
-preset.place(x=20, y=100)
+tekstPresetOpties.place(x=20, y=175)
+tekstPresetOpties.configure(text="Presets:")
 
-presetOptions = ["zwart en wit", "blauw", "test2"]
-variable2 = StringVar(schermpje)
-variable2.set(presetOptions[0])
-preset = OptionMenu(schermpje, variable2, *presetOptions)
-preset.place(x=20, y=130)
+tekstKleurenSchemaOpties.place(x=20, y=103)
+tekstKleurenSchemaOpties.configure(text="Kleurenschema:")
+
+
+presetsOpties = ["standaard", "Test2", "Test3"]
+variablePresets = StringVar(schermpje)
+variablePresets.set(presetsOpties[0])
+presets_dropdown = OptionMenu(schermpje, variablePresets, *presetsOpties)
+presets_dropdown.place(x=63, y=170)
+
+kleurenschemaOpties = ["zwart en wit", "blauw", "test2"]
+variableKleurenschema = StringVar(schermpje)
+variableKleurenschema.set(kleurenschemaOpties[0])
+kleurenschema_dropdown = OptionMenu(schermpje, variableKleurenschema, *kleurenschemaOpties)
+kleurenschema_dropdown.place(x=150, y=100)
 
 knop = Button(schermpje)
-knop.place(x=20,y=165)
+knop.place(x=150,y=135)
 knop.configure(text="bereken")
 knop.configure(command=MandelBrotAlgoritm)
 
@@ -126,10 +157,10 @@ afbeelding = Label(schermpje)
 afbeelding.place(x=0, y=200)
 afbeelding.configure(background="white")
 draw = Draw(plaatje)
+PresetMandelBrot(100, 0, 0, 0.01, "zwart en wit")
 
 
 schermpje.pack()
 schermpje.mainloop()
-
 
 
