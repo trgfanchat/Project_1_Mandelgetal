@@ -13,21 +13,21 @@ def MandelBrotAlgoritm():
     xMiddel = float(invoerXCoord.get())
     yMiddel = float(invoerYCoord.get())
     schaal = float(invoerSchaal.get())
-    colorPattern= variableKleurenschema.get()
+    colorPattern = variableKleurenschema.get()
     
-    print(plaatje.size)
     (plaatjeX, plaatjeY) = plaatje.size
-    xMin= (-plaatjeX*schaal)/2
-    xMax= (plaatjeX*schaal)/2
-    yMin= (-plaatjeY*schaal)/2
-    yMax=(plaatjeY*schaal)/2
+    xMin= (((-plaatjeX*schaal)/2)+xMiddel)
+    xMax= (((plaatjeX*schaal)/2)+xMiddel)
+    yMin= (((-plaatjeY*schaal)/2)+yMiddel)
+    yMax= (((plaatjeY*schaal)/2)+yMiddel)
     
+    print(f"schaal: {schaal}")
+    print(f"xMiddle:{xMiddel}, yMiddle:{yMiddel}")
     print(f"xmin:{xMin}, xMax:{xMax}, yMin:{yMin}, yMax:{yMax}")
     #heb hier Numpy gebruikt omdat het zonder deze library niet mogelijk is om in een for loop een increment te hebben van een float getal
     for xCoord in np.arange(float(xMin),float(xMax), schaal):
         for yCoord in np.arange(float(yMin),float(yMax), schaal):
-            MandelNumber = GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingen)
-            paintPixel((xCoord+xMax), (yCoord+yMax), MandelNumber, schaal, colorPattern)
+            paintPixel((xCoord+xMax), (yCoord+yMax), GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingen), schaal, colorPattern, xMiddel, yMiddel)
     global variabelePhotoImage
     variabelePhotoImage = PhotoImage(plaatje)
     afbeelding.configure(image=variabelePhotoImage)
@@ -36,21 +36,22 @@ def PresetMandelBrot(maxHerhalingen, xMiddel, yMiddel, schaal, colorPattern):
         
     maxHerhalingenVar = maxHerhalingen
     xMiddelVar = xMiddel
-    yMiddel = yMiddel
+    yMiddelVar = yMiddel
     schaalVar = schaal
     colorPatternVar = colorPattern
     
     (plaatjeX, plaatjeY) = plaatje.size
-    xMin= (-plaatjeX*schaalVar)/2
-    xMax= (plaatjeX*schaalVar)/2
-    yMin= (-plaatjeY*schaalVar)/2
-    yMax=(plaatjeY*schaalVar)/2
+    xMin= (((-plaatjeX*schaalVar)/2)+xMiddelVar)
+    xMax= (((plaatjeX*schaalVar)/2)+xMiddelVar)
+    yMin= (((-plaatjeY*schaalVar)/2)+yMiddelVar)
+    yMax= (((plaatjeY*schaalVar)/2)+yMiddelVar)
     
+    print(f"schaal: {schaalVar}")
+    print(f"xMiddle:{xMiddelVar}, yMiddle:{yMiddelVar}")
     print(f"xmin:{xMin}, xMax:{xMax}, yMin:{yMin}, yMax:{yMax}")
     for xCoord in np.arange(float(xMin),float(xMax), schaalVar):
         for yCoord in np.arange(float(yMin),float(yMax), schaalVar):
-            MandelNumber = GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingenVar)
-            paintPixel((xCoord+xMax), (yCoord+yMax), MandelNumber, schaalVar, colorPatternVar)
+            paintPixel((xCoord+xMax), (yCoord+yMax), GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingenVar), schaalVar, colorPatternVar, xMiddel, yMiddel)
     global variabelePhotoImage
     variabelePhotoImage = PhotoImage(plaatje)
     afbeelding.configure(image=variabelePhotoImage)
@@ -59,11 +60,11 @@ def PresetMandelBrot(maxHerhalingen, xMiddel, yMiddel, schaal, colorPattern):
 def CheckForPreset(*args):
    preset= variablePresets.get()
    if(preset==""):
-       print("")
+       pass
    elif(preset=="standaard"):
        PresetMandelBrot(100, 0, 0, 0.01, "zwart en wit")
-   elif(preset==""):
-       pass
+   elif(preset=="Test2"):
+       PresetMandelBrot(400, -0.108625, 0.9014428, 3.8147E-8, "zwart en wit")
        
 
 def GetMandelNumber(x,y, maxHerhalingen):
@@ -88,12 +89,12 @@ def GetMandelNumber(x,y, maxHerhalingen):
     
     
     
-def paintPixel(xCoord, yCoord, MandelNumber, schaal, colorPattern):
+def paintPixel(xCoord, yCoord, MandelNumber, schaal, colorPattern, xMidden, yMidden):
     if(colorPattern==("zwart en wit")):
         if(MandelNumber%2==0):    
-            draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((0), (0), (0)))
+            draw.rectangle((((((xCoord/schaal)),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((0), (0), (0)))
         else:        
-            draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((255), (255), (255)))
+            draw.rectangle((((((xCoord/schaal)),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((255), (255), (255)))
     elif(colorPattern==("blauw")):
             draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((MandelNumber+50), (MandelNumber+100), (MandelNumber+150)))
     elif(colorPattern==("test2")):
@@ -171,6 +172,7 @@ afbeelding.place(x=0, y=200)
 afbeelding.configure(background="white")
 draw = Draw(plaatje)
 PresetMandelBrot(100, 0, 0, 0.01, "zwart en wit")
+
 
 
 
