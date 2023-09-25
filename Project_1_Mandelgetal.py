@@ -46,20 +46,25 @@ def GetMandelNumber(x,y, maxHerhalingen):
             MandelNumber = MandelNumber + 1
             a=xCoord
             b=yCoord
-        if(i == (maxHerhalingen-1)):
-            MandelNumber = 98
-            return MandelNumber
+            if(i == (maxHerhalingen-1)):
+                # het maakt niet uit welk getal dit is, zolang het maar een even getal is!
+                MandelNumber = 0
+                return MandelNumber
         else:
             return MandelNumber
     
     
     
 def paintPixel(xCoord, yCoord, MandelNumber, schaal, colorPattern):
-    if(colorPattern==("black and white")):
+    if(colorPattern==("zwart en wit")):
         if(MandelNumber%2==0):    
             draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((0), (0), (0)))
         else:        
             draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((255), (255), (255)))
+    elif(colorPattern==("blauw")):
+            draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((MandelNumber+50), (MandelNumber+100), (MandelNumber+150)))
+    elif(colorPattern==("test2")):
+            draw.rectangle(((((xCoord/schaal),(yCoord/schaal))),((((xCoord+1)/schaal)),((yCoord+1)/schaal))), ((MandelNumber+150), (MandelNumber+100), (MandelNumber+50)))
     elif():
         pass
         
@@ -103,16 +108,16 @@ presetOptions = ["Test1", "Test2", "Test3"]
 variable1 = StringVar(schermpje)
 variable1.set(presetOptions[0])
 preset = OptionMenu(schermpje, variable1, *presetOptions)
-preset.place(x=300, y=20)
+preset.place(x=20, y=100)
 
-presetOptions = ["black and white", "rainbow", "color_shift_blue"]
+presetOptions = ["zwart en wit", "blauw", "test2"]
 variable2 = StringVar(schermpje)
 variable2.set(presetOptions[0])
 preset = OptionMenu(schermpje, variable2, *presetOptions)
-preset.place(x=300, y=50)
+preset.place(x=20, y=130)
 
 knop = Button(schermpje)
-knop.place(x=300,y=80)
+knop.place(x=20,y=165)
 knop.configure(text="bereken")
 knop.configure(command=MandelBrotAlgoritm)
 
