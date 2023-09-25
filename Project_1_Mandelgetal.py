@@ -23,6 +23,7 @@ def MandelBrotAlgoritm():
     yMax=(plaatjeY*schaal)/2
     
     print(f"xmin:{xMin}, xMax:{xMax}, yMin:{yMin}, yMax:{yMax}")
+    #heb hier Numpy gebruikt omdat het zonder deze library niet mogelijk is om in een for loop een increment te hebben van een float getal
     for xCoord in np.arange(float(xMin),float(xMax), schaal):
         for yCoord in np.arange(float(yMin),float(yMax), schaal):
             MandelNumber = GetMandelNumber(float(xCoord), float(yCoord), maxHerhalingen)
@@ -53,7 +54,17 @@ def PresetMandelBrot(maxHerhalingen, xMiddel, yMiddel, schaal, colorPattern):
     global variabelePhotoImage
     variabelePhotoImage = PhotoImage(plaatje)
     afbeelding.configure(image=variabelePhotoImage)
-   
+
+#logica hier achter is direct afkomstig van: https://stackoverflow.com/questions/22462654/getting-the-choice-of-optionmenu-right-after-selection-python
+def CheckForPreset(*args):
+   preset= variablePresets.get()
+   if(preset==""):
+       print("")
+   elif(preset=="standaard"):
+       PresetMandelBrot(100, 0, 0, 0.01, "zwart en wit")
+   elif(preset==""):
+       pass
+       
 
 def GetMandelNumber(x,y, maxHerhalingen):
     a=0
@@ -90,6 +101,7 @@ def paintPixel(xCoord, yCoord, MandelNumber, schaal, colorPattern):
     elif():
         pass
         
+
 
 
 schermpje = Frame()
@@ -135,11 +147,12 @@ tekstKleurenSchemaOpties.place(x=20, y=103)
 tekstKleurenSchemaOpties.configure(text="Kleurenschema:")
 
 
-presetsOpties = ["standaard", "Test2", "Test3"]
+presetsOpties = ["", "standaard", "Test2", "Test3"]
 variablePresets = StringVar(schermpje)
 variablePresets.set(presetsOpties[0])
 presets_dropdown = OptionMenu(schermpje, variablePresets, *presetsOpties)
 presets_dropdown.place(x=63, y=170)
+variablePresets.trace("w", CheckForPreset)
 
 kleurenschemaOpties = ["zwart en wit", "blauw", "test2"]
 variableKleurenschema = StringVar(schermpje)
@@ -158,6 +171,9 @@ afbeelding.place(x=0, y=200)
 afbeelding.configure(background="white")
 draw = Draw(plaatje)
 PresetMandelBrot(100, 0, 0, 0.01, "zwart en wit")
+
+
+
 
 
 schermpje.pack()
